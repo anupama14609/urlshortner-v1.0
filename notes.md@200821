@@ -1,0 +1,78 @@
+UUID, Universal Unique Identifier, is a python library which helps in generating random objects of 128 bits as ids. It provides the uniqueness as it generates ids on the basis of time, Computer hardware (MAC etc.).
+
+Advantages of UUID :
+
+Can be used as general utility to generate unique random id.
+Can be used in cryptography and hashing applications.
+Useful in generating random documents, addresses etc.
+
+References: 
+https://www.geeksforgeeks.org/generating-random-ids-using-uuid-python/
+https://www.youtube.com/watch?v=qPtScmB8CgA
+https://github.com/tomitokko/django_url_shortner
+https://fontawesome.com/v5.15/how-to-use/customizing-wordpress/snippets/setup-cdn-webfont
+
+def Create(request):
+    linkdict = dict()
+    error = ''
+    if request.method == 'POST':
+        link = request.POST['link'] 
+        if link != "":
+            try:
+                print("my link is ====================", link)    
+                uid = str(uuid.uuid4())[:5]
+                new_url = Url(link = link, uuid=uid)
+                new_url.save()
+                linkdict['uid'] = uid
+                linkdict['new_url'] = new_url
+                # return HttpResponse(uid)
+            except:
+                linkdict['msg'] = "Please Provide Valid Url Link......"
+
+        else:
+            error = "Please Enter Link......"
+
+    context = {
+        'linkdict':linkdict,
+        'error':error,
+    }
+    print(context)
+    return render(request, 'app/home.html', context)
+
+def Go(request, pk):
+    url_details = Url.objects.get(uuid=pk)
+    return redirect('https://'+url_details.link)
+
+
+ $.ajax({
+            type:'POST',
+            url: "{url 'create'}",
+            data:{
+                link:$('#link').val(),
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                },
+                success: function(data){
+                    $('h2').html("www.surls.ga/"+data)
+                }
+            // data:serializedData,
+        //    success: function(response){
+        //     $("#postform").trigger('reset');
+        //     $("#link").focus();
+           
+        //     var instance = JSON.parse(response["instance"]);
+        //     var fields = instance[0]["fields"];
+
+        //     $('#mydata tbody').prepend(
+        //         `<tr>
+        //             <td> ${fields["link"] || ""} </td>
+        //             <td> ${fields["uuid"] || ""} </td>
+        //         </tr>`
+        //     )
+
+        //    },
+           error: function (response) {
+                alert("error");
+            },
+
+        });
+    });

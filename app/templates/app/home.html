@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Pyscript Tags Analyzer{% endblock title %}
+
+{% block active %} active{% endblock active %}
+
+{% block content %}
+<div class="col-md-8 p-4 text-white">       
+    <h4 class="fst-italic">Basic URL Shortener</h4>
+   
+    <hr class="bg-light">
+    <h1 class="display-4 fst-italic">Enter Your URL To Be Shorten</h1>
+
+    <form id="postform">
+        {% csrf_token %}
+        <div class="form-group">
+            <input type="text" required class="form-control" id="link" name='link' value="" placeholder="Enter Url.........">
+        </div>
+        <button type="submit" class="btn btn-primary"  id="shorten"> Shorten</button>
+        <a href="{% url 'home' %}" class="btn btn-info">Refresh</a>
+    </form> 
+    
+    <div class="my-4">
+        <h5></h5> 
+    </div>
+
+
+ </div>
+{% endblock content %}
+
+{% block javascript %}
+<script type="text/javascript">
+    $(document).on('submit','#postform', function(e){
+    e.preventDefault();
+   
+    $.ajax({
+      type:'POST',
+      url:'/create',
+      data:{
+        link:$('#link').val(),
+        csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+      },
+      success: function(data){
+        $("#postform").trigger('reset');
+         $("#link").focus(); 
+        $('h5').prepend("www.surls.ga/"+data)
+      },
+    });
+    });
+</script>
+{% endblock javascript %}
+
